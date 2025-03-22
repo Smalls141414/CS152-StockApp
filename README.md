@@ -1,3 +1,6 @@
 # CS152-StockApp
 
-Initial Repo
+## How to utilize:
+### Frontend
+
+### Backend
