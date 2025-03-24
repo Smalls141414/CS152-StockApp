@@ -12,4 +12,3 @@
 3. Activate virtual environment: . .venv/bin/activate
 4. Install necessary packages: pip install -r requirements.txt
 5. Run app.py: python3 app.py
-
