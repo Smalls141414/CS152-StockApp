@@ -12,8 +12,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Stock App",
-  description: "App for Stock Management",
+  title: "Financial Planner",
+  description: "App for Stock Management & Retirement Planning",
 };
 
 export default function RootLayout({ children }) {
