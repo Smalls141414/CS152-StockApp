@@ -18,10 +18,11 @@ export default function Home() {
         <div className={styles.header}>
           <h1>Financial Planner - Stock App</h1>
         </div>
+
         <div className={styles.retirementcalc}>
+          <h2>Retirement Calculator</h2>
           <form>
-            <h2>Retirement Calculator</h2>
-            <p>Annual Expenditure: $</p>
+            <p>Annual Expenditure($):</p>
             <input type="text" className={styles.textfield} />
             <p>Current Age: </p>
             <input type="text" className={styles.textfield} />
@@ -31,9 +32,23 @@ export default function Home() {
             <input type="button" onClick={testResponse} className={styles.tertbutton} value="Calculate"/>
           </form>
         </div>
+
         <div className={styles.portfolioest}>
           <h2>Portfolio Value Estimator</h2>
-          <button onClick={testResponse} className={styles.secbutton}> Calculate </button>
+          <form>
+            <p>Ticker Symbol:</p>
+            <input type="text" className={styles.textfield} />
+            <p>Start Date (YYYY-MM-DD): </p>
+            <input type="text" className={styles.textfield} />
+            <p>End Date (YYYY-MM-DD): </p>
+            <input type="text" className={styles.textfield} />
+            <p>Frequency Daily(d), Monthly(m), or Yearly(y): </p>
+            <input type="text" className={styles.textfield} />
+            <p>Investment($): </p>
+            <input type="text" className={styles.textfield} />
+
+            <input type="button" onClick={testResponse} className={styles.secbutton} value="Calculate"/>
+          </form>
         </div>
     </div>
   );
