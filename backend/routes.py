@@ -1,16 +1,18 @@
 from flask import render_template, request, jsonify, session
+from api.retire_calc import calculate
+from api.portfolio_value_estimator import estimation
 
 def define_routes(app):
     @app.route("/retire", methods=['GET', 'POST'])
     def retire():
         data = request.get_json()
         print(data)
-        testResponse = {'retire_amt': 5000, 'retire_years': 5, 'inflate_rate': 12, 'time_period': 5, 'retire_amt_raw': 5000}
-        return jsonify(testResponse)
+        retireResponse = calculate( float(data["expend"]), float(data["current_age"]), float(data["retire_age"]))
+        return jsonify(retireResponse)
 
     @app.route("/portfolio", methods=['GET', 'POST'])
     def portfolio():
         data = request.get_json()
         print(data)
-        testResponse = {'ticker': 'GOOGL', 'avg_price': 12, 'end_price': 13, 'abs_return': 14, 'amount_inv': 15, 'profit': 16, 'value': 17, 'stocks': 18, 'today_value': 19, 'final_profit': 20, 'final_return': 21, 'ann_return': 22}
-        return jsonify(testResponse)
+        portfolioResponse = estimation(data["ticker"], data["start_date"], data["end_date"], float(data["investment"]), data["frequency"])
+        return jsonify(portfolioResponse)

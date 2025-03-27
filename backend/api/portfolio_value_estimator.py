@@ -129,6 +129,74 @@ def main():
             print("Thank you for trying out Dollar Cost Average Return on Investment Calculator! Have a nice day!")
             break
 
+def estimation(ticker_symbol, start_date_str, end_date_str, investment, frequency):
+    stock_info = yf.Ticker(ticker_symbol)
+
+    company_name = stock_info.info['shortName']
+
+    daily_investment_amount = 0.0
+    if 'm' in frequency.lower():
+        monthly_investment_amount = investment
+        daily_investment_amount = (monthly_investment_amount * NUM_OF_MONTHS_IN_A_YEAR) / NUM_OF_MARKET_DAYS_IN_A_YEAR
+    elif 'y' in frequency.lower():
+        yearly_investment_amount = investment
+        daily_investment_amount = yearly_investment_amount / NUM_OF_MARKET_DAYS_IN_A_YEAR
+    else:
+        daily_investment_amount = investment
+
+    # Convert the string input into datetime objects
+    start_date = datetime.datetime.strptime(start_date_str, "%Y-%m-%d")
+    # Ensure that the start date falls on a market day
+    while not is_market_open(start_date):
+        start_date = start_date - datetime.timedelta(days=1)
+    end_date = datetime.datetime.strptime(end_date_str, "%Y-%m-%d")
+
+    today_date = (datetime.datetime.now()).replace(hour=0, minute=0, second=0, microsecond=0)
+    ten_days_before_today = (datetime.datetime.now() - datetime.timedelta(days=10)).replace(hour=0, minute=0, second=0, microsecond=0)
+
+    # Fetch the stock data from Yahoo Finance for the specified period
+    stock_data = yf.download(ticker_symbol, start=start_date, end=end_date)
+    past_ten_days_stock_data = yf.download(ticker_symbol, start=ten_days_before_today, end=today_date)
+
+    # Get the closing prices as a list of floats
+
+    closing_prices = stock_data['Close']
+
+    # print(f'\n\n\nClosing prices = {closing_prices}\n\n\n')
+    closing_prices = closing_prices.values.flatten().tolist()
+    # print(f'\n\n\nClosing prices after flattening= {closing_prices}\n\n\n')
+    past_ten_days_closing_prices = past_ten_days_stock_data['Close'].values.flatten().tolist()
+
+    # Calculate the average price (Dollar Cost Averaging)
+    average_price = sum(closing_prices) / len(closing_prices)
+
+    # Get the latest closing price in the data range
+    latest_closing_price = closing_prices[-1]
+    todays_closing_price = past_ten_days_closing_prices[-1]
+
+    # Calculate the rate of return based on Dollar Cost Averaging
+    rate_of_return = ((latest_closing_price / average_price) - 1) * 100
+
+    num_investment_days = len(closing_prices)
+
+    invested_amount = daily_investment_amount * num_investment_days
+
+    profit = invested_amount * (rate_of_return / 100)
+
+    portfolio_value = invested_amount + profit
+
+    num_of_stocks = portfolio_value / latest_closing_price
+
+    todays_portfolio_value = num_of_stocks * todays_closing_price
+
+    final_today_rate_of_return = ((todays_portfolio_value / invested_amount) - 1)
+    final_today_rate_of_return_percent = final_today_rate_of_return * 100
+    final_profit = round(invested_amount * final_today_rate_of_return, 2)
+
+    annual_irr_percent = calculate_annualized_irr(daily_investment_amount, closing_prices, todays_portfolio_value)
+    
+    # Return Results
+    return {'ticker': ticker_symbol, 'avg_price': round(average_price, 2), 'end_price': round(latest_closing_price, 2), 'abs_return': round(rate_of_return, 2), 'amount_inv': round(invested_amount, 2), 'profit': round(profit, 2), 'value': round(portfolio_value, 2), 'stocks': round(num_of_stocks, 2), 'today_value': round(todays_portfolio_value, 2), 'final_profit': final_profit, 'final_return': round(final_today_rate_of_return_percent, 2), 'ann_return': round(annual_irr_percent, 2)}
 
 if __name__ == "__main__":
     main()

@@ -5,9 +5,11 @@
   --secondary-background: #114B5F;
   --secondary-submit: #377083;
   --secondary-hover: #6e96a3;
+  --secondary-result: #0b2f3b;
   --tertiary-background: #1A936F;
   --tertiary-submit: #88D498;
   --tertiary-hover: #C6DABF;
+  --tertiary-result: #105540;
 }
 
 html,
